@@ -3,930 +3,655 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#FF6B1A">
+<meta name="theme-color" content="#C8860A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="PropCRM">
-<link rel="manifest" href="manifest.json">
-<title>प्रॉपर्टी CRM</title>
+<meta name="apple-mobile-web-app-title" content="NCR Property Guru">
+<title>NCR Property Guru</title>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0F0820;
-  --card: #1C1235;
-  --card2: #231844;
-  --saffron: #FF6B1A;
-  --gold: #FFB300;
-  --mint: #00E5A0;
-  --sky: #00C2FF;
-  --danger: #FF4060;
-  --text: #F0E8FF;
-  --muted: #8B7BAB;
-  --border: rgba(255,255,255,0.07);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --bg:#0A0A0A; --card:#141414; --card2:#1C1C1C;
+  --gold:#C8860A; --gold2:#F0A500; --gold3:#FFD060;
+  --mint:#00C896; --sky:#0094CC; --danger:#E03050;
+  --text:#F5F0E8; --muted:#888070; --border:rgba(200,134,10,0.15);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
 }
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;font-family:'Noto Sans Devanagari',sans-serif;background:var(--bg);color:var(--text);}
 
-* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+/* ── LOGIN SCREEN ── */
+.login-screen{
+  position:fixed;inset:0;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:999;padding:24px;
+}
+.login-logo{
+  width:80px;height:80px;border-radius:24px;
+  background:linear-gradient(135deg,var(--gold),var(--gold3));
+  display:flex;align-items:center;justify-content:center;font-size:40px;
+  margin-bottom:16px;
+  box-shadow:0 8px 32px rgba(200,134,10,0.3);
+}
+.login-title{font-family:'Baloo 2',cursive;font-size:24px;font-weight:800;text-align:center;margin-bottom:4px;}
+.login-title span{color:var(--gold2);}
+.login-sub{font-size:13px;color:var(--muted);margin-bottom:32px;text-align:center;}
+.login-box{width:100%;max-width:340px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;}
+.login-label{font-size:12px;color:var(--muted);margin-bottom:6px;display:block;}
+.login-input{
+  width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);
+  border-radius:11px;padding:13px 14px;color:var(--text);
+  font-family:'Noto Sans Devanagari',sans-serif;font-size:15px;outline:none;
+  transition:border-color 0.2s;margin-bottom:14px;
+}
+.login-input:focus{border-color:var(--gold2);}
+.login-btn{
+  width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:white;border:none;border-radius:13px;cursor:pointer;
+  font-family:'Baloo 2',cursive;font-size:17px;font-weight:700;
+  transition:transform 0.15s;
+}
+.login-btn:active{transform:scale(0.97);}
+.login-error{color:var(--danger);font-size:13px;text-align:center;margin-top:10px;display:none;}
+.login-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:16px;line-height:1.6;}
+.login-hint b{color:var(--gold2);}
 
-html, body {
-  height: 100%; overflow: hidden;
-  font-family: 'Noto Sans Devanagari', sans-serif;
-  background: var(--bg); color: var(--text);
-  touch-action: manipulation;
-}
+/* ── MAIN APP ── */
+.app{display:none;}
+.app.visible{display:block;}
 
-/* ── SCREENS ── */
-.screen {
-  position: absolute; inset: 0;
-  display: none; flex-direction: column;
-  overflow: hidden;
-}
-.screen.active { display: flex; }
+.screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden;}
+.screen.active{display:flex;}
+.status-bar{height:env(safe-area-inset-top,36px);background:var(--bg);flex-shrink:0;}
 
-/* ── STATUS BAR SPACER ── */
-.status-bar { height: env(safe-area-inset-top, 44px); background: var(--bg); flex-shrink: 0; }
+.header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 8px;flex-shrink:0;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--gold),var(--gold3));display:flex;align-items:center;justify-content:center;font-size:20px;}
+.brand-name{font-family:'Baloo 2',cursive;font-size:16px;font-weight:800;line-height:1.1;}
+.brand-name span{color:var(--gold2);}
+.brand-sub{font-size:10px;color:var(--muted);}
+.icon-btn{width:38px;height:38px;border-radius:11px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;}
+.icon-btn:active{transform:scale(0.92);}
 
-/* ── TOP HEADER ── */
-.header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 16px 10px;
-  flex-shrink: 0;
-}
-.header-title {
-  font-family: 'Baloo 2', cursive;
-  font-size: 22px; font-weight: 800;
-}
-.header-title span { color: var(--saffron); }
-.header-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
-.icon-btn {
-  width: 40px; height: 40px; border-radius: 12px;
-  background: var(--card); border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; cursor: pointer;
-  transition: transform 0.15s;
-}
-.icon-btn:active { transform: scale(0.92); }
+.scroll-content{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 14px 90px;-webkit-overflow-scrolling:touch;}
+.scroll-content::-webkit-scrollbar{display:none;}
 
-/* ── SCROLL CONTENT ── */
-.scroll-content {
-  flex: 1; overflow-y: auto; overflow-x: hidden;
-  padding: 0 16px 100px;
-  -webkit-overflow-scrolling: touch;
+/* BOTTOM NAV */
+.bottom-nav{
+  position:absolute;bottom:0;left:0;right:0;
+  height:calc(60px + var(--safe-bottom));
+  background:rgba(10,10,10,0.97);border-top:1px solid var(--border);
+  display:flex;align-items:flex-start;justify-content:space-around;padding-top:8px;z-index:50;
 }
-.scroll-content::-webkit-scrollbar { display: none; }
+.nav-tab{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 10px;}
+.nav-tab .ni{font-size:20px;transition:transform 0.2s;}
+.nav-tab .nl{font-size:10px;color:var(--muted);transition:color 0.2s;}
+.nav-tab.active .nl{color:var(--gold2);}
+.nav-tab.active .ni{transform:translateY(-2px);}
+.nav-dot{width:4px;height:4px;border-radius:50%;background:var(--gold2);opacity:0;}
+.nav-tab.active .nav-dot{opacity:1;}
 
-/* ── BOTTOM NAV ── */
-.bottom-nav {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  height: calc(64px + var(--safe-bottom));
-  background: rgba(15,8,32,0.95);
-  border-top: 1px solid var(--border);
-  display: flex; align-items: flex-start; justify-content: space-around;
-  padding-top: 8px;
-  backdrop-filter: blur(20px);
-  z-index: 50;
-}
-.nav-tab {
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
-  cursor: pointer; padding: 4px 16px;
-  transition: all 0.2s;
-}
-.nav-tab .nav-icon { font-size: 22px; transition: transform 0.2s; }
-.nav-tab .nav-label { font-size: 10px; color: var(--muted); transition: color 0.2s; }
-.nav-tab.active .nav-label { color: var(--saffron); }
-.nav-tab.active .nav-icon { transform: translateY(-2px); }
-.nav-tab .nav-dot {
-  width: 5px; height: 5px; border-radius: 50%;
-  background: var(--saffron);
-  opacity: 0; transition: opacity 0.2s;
-}
-.nav-tab.active .nav-dot { opacity: 1; }
+/* KPI */
+.kpi-strip{display:flex;gap:10px;overflow-x:auto;padding:4px 0 8px;}
+.kpi-strip::-webkit-scrollbar{display:none;}
+.kpi-tile{flex-shrink:0;min-width:105px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;}
+.kt-label{font-size:11px;color:var(--muted);}
+.kt-val{font-family:'Baloo 2',cursive;font-size:26px;font-weight:800;line-height:1.1;}
+.kt-ch{font-size:11px;margin-top:1px;}
+.kt-gold .kt-val{color:var(--gold2);} .kt-mint .kt-val{color:var(--mint);} .kt-sky .kt-val{color:var(--sky);} .kt-red .kt-val{color:var(--danger);}
+.up{color:var(--mint);} .dn{color:var(--danger);}
 
-/* ── KPI STRIP ── */
-.kpi-strip {
-  display: flex; gap: 10px; overflow-x: auto;
-  padding: 4px 0 8px; margin-bottom: 4px;
-}
-.kpi-strip::-webkit-scrollbar { display: none; }
-.kpi-tile {
-  flex-shrink: 0; min-width: 110px;
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 14px; padding: 14px 14px 12px;
-}
-.kpi-tile .kt-label { font-size: 11px; color: var(--muted); }
-.kpi-tile .kt-val {
-  font-family: 'Baloo 2', cursive;
-  font-size: 26px; font-weight: 800; line-height: 1.1;
-}
-.kpi-tile .kt-ch { font-size: 11px; margin-top: 2px; }
-.kt-orange .kt-val { color: var(--saffron); }
-.kt-gold .kt-val { color: var(--gold); }
-.kt-mint .kt-val { color: var(--mint); }
-.kt-sky .kt-val { color: var(--sky); }
-.kt-ch.up { color: var(--mint); }
-.kt-ch.dn { color: var(--danger); }
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin:14px 0 8px;}
+.sec-title{font-family:'Baloo 2',cursive;font-size:15px;font-weight:700;}
+.sec-link{font-size:12px;color:var(--sky);cursor:pointer;}
 
-/* ── SECTION HEADER ── */
-.sec-head {
-  display: flex; align-items: center; justify-content: space-between;
-  margin: 16px 0 10px;
-}
-.sec-title {
-  font-family: 'Baloo 2', cursive;
-  font-size: 15px; font-weight: 700;
-}
-.sec-link { font-size: 12px; color: var(--sky); cursor: pointer; }
+/* LEAD CARD */
+.lead-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:13px;margin-bottom:10px;cursor:pointer;transition:transform 0.15s;}
+.lead-card:active{transform:scale(0.98);}
+.lead-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.lead-av{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.av-hot{background:rgba(200,134,10,0.2);} .av-warm{background:rgba(0,200,150,0.15);} .av-cold{background:rgba(0,148,204,0.12);}
+.lead-info{flex:1;}
+.lead-name{font-size:15px;font-weight:700;}
+.lead-prop{font-size:11px;color:var(--muted);margin-top:1px;}
+.score-ring{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;font-family:'Baloo 2',cursive;}
+.ring-hot{background:rgba(200,134,10,0.15);color:var(--gold2);border:2px solid rgba(200,134,10,0.4);}
+.ring-warm{background:rgba(0,200,150,0.12);color:var(--mint);border:2px solid rgba(0,200,150,0.3);}
+.ring-cold{background:rgba(0,148,204,0.1);color:var(--sky);border:2px solid rgba(0,148,204,0.3);}
+.lead-mid{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.lead-budget{font-size:15px;font-weight:800;color:var(--gold2);}
+.pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;}
+.p-new{background:rgba(0,200,150,0.12);color:var(--mint);}
+.p-fu{background:rgba(200,134,10,0.12);color:var(--gold2);}
+.p-visit{background:rgba(0,148,204,0.12);color:var(--sky);}
+.p-neg{background:rgba(240,165,0,0.15);color:var(--gold3);}
+.p-cold{background:rgba(224,48,80,0.12);color:var(--danger);}
+.lead-actions{display:flex;gap:8px;}
+.act-btn{flex:1;padding:10px;border-radius:10px;border:none;cursor:pointer;font-family:'Noto Sans Devanagari',sans-serif;font-size:13px;font-weight:600;}
+.act-btn:active{transform:scale(0.95);}
+.act-wa{background:linear-gradient(135deg,#25D366,#128C7E);color:white;}
+.act-call{background:linear-gradient(135deg,var(--gold),var(--gold2));color:white;}
+.act-map{background:var(--card2);color:var(--text);border:1px solid var(--border);}
 
-/* ── LEAD CARD ── */
-.lead-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 14px;
-  margin-bottom: 10px;
-  display: flex; flex-direction: column; gap: 10px;
-  transition: transform 0.15s;
-  cursor: pointer;
-}
-.lead-card:active { transform: scale(0.98); }
-.lead-top { display: flex; align-items: center; gap: 10px; }
-.lead-avatar {
-  width: 44px; height: 44px; border-radius: 14px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; flex-shrink: 0;
-}
-.av-hot { background: rgba(255,107,26,0.2); }
-.av-warm { background: rgba(255,179,0,0.15); }
-.av-cold { background: rgba(0,194,255,0.12); }
+/* AI BOX */
+.ai-box{background:linear-gradient(135deg,rgba(200,134,10,0.08),rgba(240,165,0,0.05));border:1px solid rgba(200,134,10,0.2);border-radius:13px;padding:13px;display:flex;gap:10px;margin-bottom:12px;}
+.ai-box b{color:var(--gold2);}
 
-.lead-info { flex: 1; }
-.lead-name { font-size: 15px; font-weight: 700; }
-.lead-prop { font-size: 12px; color: var(--muted); margin-top: 1px; }
+/* SHEET */
+.sheet-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.75);z-index:100;display:none;align-items:flex-end;backdrop-filter:blur(6px);}
+.sheet-overlay.open{display:flex;}
+.sheet{width:100%;background:var(--card);border-radius:22px 22px 0 0;padding:0 16px calc(24px + var(--safe-bottom));animation:sheetUp 0.3s ease;max-height:92vh;overflow-y:auto;}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.sheet-handle{width:38px;height:4px;border-radius:2px;background:rgba(255,255,255,0.12);margin:12px auto 16px;}
+.sheet-title{font-family:'Baloo 2',cursive;font-size:20px;font-weight:800;margin-bottom:16px;}
+.form-field{margin-bottom:13px;}
+.form-label{font-size:12px;color:var(--muted);margin-bottom:5px;display:block;}
+.form-input,.form-select,.form-textarea{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:10px;padding:12px 13px;color:var(--text);font-family:'Noto Sans Devanagari',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s;-webkit-appearance:none;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--gold2);}
+.form-select option{background:var(--bg);}
+.form-textarea{resize:none;height:75px;}
+.form-row2{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.big-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:white;border:none;border-radius:13px;cursor:pointer;font-family:'Baloo 2',cursive;font-size:17px;font-weight:700;margin-top:6px;}
+.big-btn:active{transform:scale(0.97);}
+.big-btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);}
+.big-btn-danger{background:linear-gradient(135deg,var(--danger),#FF4060);}
+.big-btn-wa{background:linear-gradient(135deg,#25D366,#128C7E);}
 
-.score-ring {
-  width: 42px; height: 42px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 800;
-  font-family: 'Baloo 2', cursive;
-}
-.ring-hot { background: rgba(255,107,26,0.15); color: var(--saffron); border: 2px solid rgba(255,107,26,0.4); }
-.ring-warm { background: rgba(255,179,0,0.12); color: var(--gold); border: 2px solid rgba(255,179,0,0.35); }
-.ring-cold { background: rgba(0,194,255,0.1); color: var(--sky); border: 2px solid rgba(0,194,255,0.3); }
+/* ADMIN PANEL */
+.agent-card-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;}
+.agent-avatar{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.av-admin{background:linear-gradient(135deg,var(--gold),var(--gold3));}
+.av-agent{background:linear-gradient(135deg,#334,#556);}
+.agent-info{flex:1;}
+.agent-name-text{font-size:15px;font-weight:700;}
+.agent-role{font-size:11px;color:var(--muted);margin-top:2px;}
+.agent-badge{font-size:11px;padding:4px 10px;border-radius:20px;font-weight:600;}
+.badge-admin{background:rgba(200,134,10,0.15);color:var(--gold2);}
+.badge-agent{background:rgba(0,148,204,0.12);color:var(--sky);}
+.badge-pending{background:rgba(224,48,80,0.12);color:var(--danger);}
 
-.lead-bottom { display: flex; align-items: center; justify-content: space-between; }
-.lead-budget { font-size: 14px; font-weight: 700; color: var(--gold); }
+/* FOLLOWUP */
+.fu-card{background:var(--card);border-radius:13px;border-left:3px solid transparent;padding:12px;margin-bottom:9px;display:flex;align-items:center;gap:11px;}
+.fu-card.urg{border-left-color:var(--danger);}
+.fu-card.tod{border-left-color:var(--gold2);}
+.fu-card.upc{border-left-color:var(--sky);}
+.fu-time{font-size:11px;width:42px;text-align:center;flex-shrink:0;}
+.fu-name{font-size:14px;font-weight:700;}
+.fu-act{font-size:11px;color:var(--muted);margin-top:1px;}
+.fu-btn{padding:7px 11px;border-radius:9px;border:none;cursor:pointer;font-family:'Noto Sans Devanagari',sans-serif;font-size:12px;font-weight:600;margin-left:auto;}
+.fu-wa{background:linear-gradient(135deg,#25D366,#128C7E);color:white;}
+.fu-call{background:linear-gradient(135deg,var(--gold),var(--gold2));color:white;}
 
-.pill {
-  display: inline-block; padding: 3px 10px;
-  border-radius: 20px; font-size: 11px; font-weight: 600;
-}
-.p-new { background: rgba(0,229,160,0.12); color: var(--mint); }
-.p-fu { background: rgba(255,179,0,0.12); color: var(--gold); }
-.p-visit { background: rgba(0,194,255,0.12); color: var(--sky); }
-.p-neg { background: rgba(255,107,26,0.12); color: var(--saffron); }
-.p-cold { background: rgba(255,64,96,0.12); color: var(--danger); }
+/* PAYMENT */
+.pay-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;}
+.pay-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.pay-name{font-size:15px;font-weight:700;}
+.pay-prop{font-size:11px;color:var(--muted);margin-top:1px;}
+.pay-amount{font-family:'Baloo 2',cursive;font-size:20px;font-weight:800;color:var(--gold2);text-align:right;}
+.pay-sub{font-size:10px;color:var(--muted);}
+.pay-progress{height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;margin-bottom:6px;}
+.pay-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold),var(--gold3));}
+.pay-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);}
 
-.lead-actions { display: flex; gap: 8px; }
-.act-btn {
-  flex: 1; padding: 9px;
-  border-radius: 10px; border: none; cursor: pointer;
-  font-family: 'Noto Sans Devanagari', sans-serif;
-  font-size: 13px; font-weight: 600;
-  transition: transform 0.15s;
-}
-.act-btn:active { transform: scale(0.95); }
-.act-call { background: var(--saffron); color: white; }
-.act-msg { background: var(--card2); color: var(--text); border: 1px solid var(--border); }
+.stat-row{display:flex;gap:10px;margin-bottom:10px;}
+.stat-tile{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 10px;text-align:center;}
+.stv{font-family:'Baloo 2',cursive;font-size:22px;font-weight:800;}
+.stl{font-size:10px;color:var(--muted);margin-top:2px;}
 
-/* ── FUNNEL ── */
-.funnel-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 10px; }
-.funnel-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-.funnel-row:last-child { margin-bottom: 0; }
-.funnel-lbl { font-size: 12px; width: 90px; flex-shrink: 0; }
-.funnel-track { flex: 1; height: 28px; background: rgba(255,255,255,0.05); border-radius: 7px; overflow: hidden; }
-.funnel-fill {
-  height: 100%; border-radius: 7px;
-  display: flex; align-items: center; padding-left: 10px;
-  font-size: 12px; font-weight: 700;
-  transition: width 1s cubic-bezier(.4,0,.2,1);
-}
-.funnel-n { font-size: 12px; color: var(--muted); width: 28px; text-align: right; }
+.toast{position:absolute;bottom:85px;left:14px;right:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0A0A0A;padding:13px 16px;border-radius:12px;font-size:14px;font-weight:700;text-align:center;z-index:300;opacity:0;transform:translateY(8px);transition:all 0.3s;pointer-events:none;}
+.toast.show{opacity:1;transform:translateY(0);}
 
-/* ── FOLLOWUP CARD ── */
-.fu-card {
-  background: var(--card); border-radius: 13px;
-  border-left: 3px solid transparent;
-  padding: 13px; margin-bottom: 9px;
-  display: flex; align-items: center; gap: 12px;
-  cursor: pointer; transition: transform 0.15s;
-}
-.fu-card:active { transform: scale(0.98); }
-.fu-card.urg { border-left-color: var(--danger); }
-.fu-card.tod { border-left-color: var(--gold); }
-.fu-card.upc { border-left-color: var(--sky); }
-.fu-time { font-size: 11px; width: 44px; text-align: center; flex-shrink: 0; }
-.fu-name { font-size: 14px; font-weight: 700; }
-.fu-act { font-size: 11px; color: var(--muted); margin-top: 1px; }
-.fu-btn {
-  margin-left: auto; padding: 7px 12px;
-  border-radius: 9px; border: none; cursor: pointer;
-  font-family: 'Noto Sans Devanagari', sans-serif;
-  font-size: 12px; font-weight: 600;
-}
-.fu-btn-call { background: var(--saffron); color: white; }
-.fu-btn-msg { background: var(--card2); color: var(--text); border: 1px solid var(--border); }
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp 0.4s ease both;}
 
-/* ── AI INSIGHT ── */
-.ai-box {
-  background: linear-gradient(135deg, rgba(0,229,160,0.07), rgba(0,194,255,0.07));
-  border: 1px solid rgba(0,229,160,0.18);
-  border-radius: 13px; padding: 13px;
-  display: flex; gap: 10px;
-  margin-bottom: 14px;
-}
-.ai-box-icon { font-size: 24px; flex-shrink: 0; }
-.ai-box-text { font-size: 13px; line-height: 1.6; }
-.ai-box-text b { color: var(--mint); }
-
-/* ── BEHAVIOR BARS ── */
-.beh-item { margin-bottom: 13px; }
-.beh-head { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px; }
-.beh-track { height: 7px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; }
-.beh-fill { height: 100%; border-radius: 4px; }
-
-/* ── STAT ROW ── */
-.stat-row { display: flex; gap: 10px; margin-top: 14px; }
-.stat-tile {
-  flex: 1; background: var(--card2);
-  border: 1px solid var(--border);
-  border-radius: 12px; padding: 12px 10px;
-  text-align: center;
-}
-.stat-val { font-family: 'Baloo 2', cursive; font-size: 22px; font-weight: 800; }
-.stat-lbl { font-size: 10px; color: var(--muted); margin-top: 2px; }
-
-/* ── ADD LEAD SHEET ── */
-.sheet-overlay {
-  position: absolute; inset: 0;
-  background: rgba(0,0,0,0.6);
-  z-index: 100; display: none;
-  align-items: flex-end;
-  backdrop-filter: blur(4px);
-}
-.sheet-overlay.open { display: flex; }
-.sheet {
-  width: 100%; background: var(--card);
-  border-radius: 24px 24px 0 0;
-  padding: 0 16px calc(20px + var(--safe-bottom));
-  animation: sheetUp 0.35s cubic-bezier(.4,0,.2,1);
-  max-height: 90vh; overflow-y: auto;
-}
-@keyframes sheetUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
-}
-.sheet-handle {
-  width: 40px; height: 4px; border-radius: 2px;
-  background: rgba(255,255,255,0.15);
-  margin: 12px auto 18px;
-}
-.sheet-title { font-family: 'Baloo 2', cursive; font-size: 20px; font-weight: 800; margin-bottom: 18px; }
-
-.form-field { margin-bottom: 14px; }
-.form-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; display: block; }
-.form-input, .form-select {
-  width: 100%; background: rgba(255,255,255,0.06);
-  border: 1px solid var(--border); border-radius: 11px;
-  padding: 13px 14px; color: var(--text);
-  font-family: 'Noto Sans Devanagari', sans-serif;
-  font-size: 14px; outline: none;
-  transition: border-color 0.2s;
-  -webkit-appearance: none;
-}
-.form-input:focus, .form-select:focus { border-color: var(--saffron); }
-.form-select option { background: var(--bg); }
-.form-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-.big-btn {
-  width: 100%; padding: 15px;
-  background: var(--saffron); color: white;
-  border: none; border-radius: 14px; cursor: pointer;
-  font-family: 'Baloo 2', cursive;
-  font-size: 17px; font-weight: 700;
-  margin-top: 6px;
-  transition: transform 0.15s;
-}
-.big-btn:active { transform: scale(0.97); }
-
-/* ── TOAST ── */
-.toast {
-  position: absolute; bottom: 90px; left: 16px; right: 16px;
-  background: var(--mint); color: #001a10;
-  padding: 14px 18px; border-radius: 13px;
-  font-size: 14px; font-weight: 700;
-  text-align: center; z-index: 200;
-  opacity: 0; transform: translateY(10px);
-  transition: all 0.3s; pointer-events: none;
-}
-.toast.show { opacity: 1; transform: translateY(0); }
-
-/* ── INSTALL BANNER ── */
-.install-banner {
-  background: linear-gradient(135deg, rgba(255,107,26,0.15), rgba(255,179,0,0.1));
-  border: 1px solid rgba(255,107,26,0.25);
-  border-radius: 13px; padding: 13px 14px;
-  display: flex; align-items: center; gap: 12px;
-  margin-bottom: 14px; cursor: pointer;
-}
-.install-text { flex: 1; }
-.install-text .it-title { font-size: 14px; font-weight: 700; color: var(--saffron); }
-.install-text .it-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
-
-/* ── REPORT SCREEN ── */
-.report-card {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 14px; padding: 16px; margin-bottom: 12px;
-}
-.rc-title { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
-.rc-val { font-family: 'Baloo 2', cursive; font-size: 30px; font-weight: 800; }
-.rc-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
-
-.mini-bars { display: flex; align-items: flex-end; gap: 6px; height: 60px; margin-top: 10px; }
-.mb-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
-.mb-bar { width: 100%; border-radius: 4px 4px 0 0; background: linear-gradient(180deg, var(--saffron), rgba(255,107,26,0.3)); }
-.mb-lbl { font-size: 9px; color: var(--muted); }
-
-/* page load animation */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.fade-up { animation: fadeUp 0.4s ease both; }
-.fade-up:nth-child(1) { animation-delay: 0.05s; }
-.fade-up:nth-child(2) { animation-delay: 0.1s; }
-.fade-up:nth-child(3) { animation-delay: 0.15s; }
-.fade-up:nth-child(4) { animation-delay: 0.2s; }
-.fade-up:nth-child(5) { animation-delay: 0.25s; }
+/* USER ROLE BADGE */
+.role-bar{background:rgba(200,134,10,0.08);border-bottom:1px solid var(--border);padding:6px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.role-text{font-size:11px;color:var(--muted);}
+.role-text b{color:var(--gold2);}
+.logout-btn{font-size:11px;color:var(--danger);cursor:pointer;padding:4px 8px;border-radius:6px;background:rgba(224,48,80,0.08);}
 </style>
 </head>
 <body>
 
-<!-- ════ SCREEN: HOME ════ -->
-<div class="screen active" id="sc-home">
-  <div class="status-bar"></div>
-  <div class="header">
-    <div>
-      <div class="header-title">नमस्ते, <span>राहुल</span> 👋</div>
-      <div class="header-sub">आज 4 फॉलो-अप पेंडिंग हैं</div>
-    </div>
-    <div style="display:flex;gap:8px">
-      <div class="icon-btn" onclick="showAdd()">➕</div>
-      <div class="icon-btn" style="position:relative">
-        🔔
-        <div style="position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--saffron);border:2px solid var(--bg)"></div>
-      </div>
-    </div>
+<!-- ══════ LOGIN SCREEN ══════ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-logo">🏆</div>
+  <div class="login-title">NCR <span>Property Guru</span></div>
+  <div class="login-sub">📍 नोएडा | Login करके शुरू करें</div>
+
+  <div class="login-box">
+    <label class="login-label">👤 Agent ID / Username</label>
+    <input class="login-input" id="loginUser" placeholder="जैसे: admin या agent1" autocomplete="off">
+    <label class="login-label">🔑 Password</label>
+    <input class="login-input" id="loginPass" type="password" placeholder="••••••••">
+    <button class="login-btn" onclick="doLogin()">🚀 Login करें</button>
+    <div class="login-error" id="loginError">❌ गलत ID या Password!</div>
   </div>
 
-  <div class="scroll-content">
-    <!-- KPI STRIP -->
-    <div class="kpi-strip">
-      <div class="kpi-tile kt-orange fade-up">
-        <div class="kt-label">कुल लीड्स</div>
-        <div class="kt-val">148</div>
-        <div class="kt-ch up">↑ 12% माह</div>
-      </div>
-      <div class="kpi-tile kt-gold fade-up">
-        <div class="kt-label">हॉट लीड्स</div>
-        <div class="kt-val">34</div>
-        <div class="kt-ch up">↑ 8% हफ्ता</div>
-      </div>
-      <div class="kpi-tile kt-mint fade-up">
-        <div class="kt-label">कन्वर्जन</div>
-        <div class="kt-val">23%</div>
-        <div class="kt-ch up">↑ 3%</div>
-      </div>
-      <div class="kpi-tile kt-sky fade-up">
-        <div class="kt-label">कमाई</div>
-        <div class="kt-val">₹4.2L</div>
-        <div class="kt-ch dn">↓ 2% टार्गेट</div>
-      </div>
-    </div>
+  <div class="login-hint">
+    <b>Admin:</b> admin / NCRguru@2024<br>
+    अपने agents को आप खुद ID & Password देंगे
+  </div>
+</div>
 
-    <!-- INSTALL BANNER -->
-    <div class="install-banner" id="installBanner" onclick="promptInstall()">
-      <span style="font-size:28px">📲</span>
-      <div class="install-text">
-        <div class="it-title">Home Screen पर Add करें</div>
-        <div class="it-sub">App जैसा experience पाएं — offline भी चलेगा!</div>
-      </div>
-      <span style="font-size:20px;color:var(--saffron)">›</span>
-    </div>
+<!-- ══════ MAIN APP ══════ -->
+<div class="app" id="mainApp">
 
-    <!-- AI INSIGHT -->
-    <div class="ai-box fade-up">
-      <span class="ai-box-icon">🤖</span>
-      <div class="ai-box-text">
-        <b>AI सुझाव:</b> सुनील वर्मा ने आज <b>3 बार</b> listing देखी — <b>शाम 5 बजे</b> कॉल करें!
-      </div>
-    </div>
-
-    <!-- HOT LEADS -->
-    <div class="sec-head">
-      <div class="sec-title">🔥 हॉट लीड्स</div>
-      <div class="sec-link" onclick="showScreen('sc-leads')">सभी देखें</div>
-    </div>
-
-    <div class="lead-card fade-up" onclick="showScreen('sc-leads')">
-      <div class="lead-top">
-        <div class="lead-avatar av-hot">👨</div>
-        <div class="lead-info">
-          <div class="lead-name">सुनील वर्मा</div>
-          <div class="lead-prop">3BHK फ्लैट • नोएडा • 📞 98765 43210</div>
+  <!-- HOME -->
+  <div class="screen active" id="sc-home">
+    <div class="status-bar"></div>
+    <div class="header">
+      <div class="brand">
+        <div class="brand-logo">🏆</div>
+        <div>
+          <div class="brand-name">NCR <span>Property Guru</span></div>
+          <div class="brand-sub" id="headerSub">📍 नोएडा • 9625320621</div>
         </div>
-        <div class="score-ring ring-hot">92</div>
       </div>
-      <div class="lead-bottom">
-        <div><div class="lead-budget">₹85 लाख</div><span class="pill p-neg">बातचीत</span></div>
-      </div>
-      <div class="lead-actions">
-        <button class="act-btn act-call" onclick="event.stopPropagation();callLead('सुनील वर्मा')">📞 कॉल करें</button>
-        <button class="act-btn act-msg" onclick="event.stopPropagation();msgLead('सुनील वर्मा')">💬 WhatsApp</button>
+      <div style="display:flex;gap:7px">
+        <div class="icon-btn" onclick="showSheet('addSheet')">➕</div>
+        <div class="icon-btn" style="position:relative">🔔<div style="position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--gold2);border:2px solid var(--bg)"></div></div>
       </div>
     </div>
+    <div class="role-bar">
+      <div class="role-text">Login: <b id="roleLabel">—</b></div>
+      <div class="logout-btn" onclick="doLogout()">🚪 Logout</div>
+    </div>
+    <div class="scroll-content">
+      <div class="kpi-strip">
+        <div class="kpi-tile kt-gold fade-up"><div class="kt-label">कुल लीड्स</div><div class="kt-val" id="kpi-total">0</div><div class="kt-ch up">↑ नोएडा</div></div>
+        <div class="kpi-tile kt-mint fade-up"><div class="kt-label">हॉट लीड्स</div><div class="kt-val" id="kpi-hot">0</div><div class="kt-ch up">↑ इस हफ्ते</div></div>
+        <div class="kpi-tile kt-sky fade-up"><div class="kt-label">Conversion</div><div class="kt-val">23%</div><div class="kt-ch up">↑ 3%</div></div>
+        <div class="kpi-tile kt-red fade-up"><div class="kt-label">कमाई</div><div class="kt-val">₹4.2L</div><div class="kt-ch dn">↓ टार्गेट</div></div>
+      </div>
+      <div class="ai-box fade-up">
+        <span style="font-size:22px">🤖</span>
+        <div style="font-size:13px;line-height:1.6"><b>AI सुझाव:</b> आज शाम <b>5-7 बजे</b> नोएडा में सबसे ज़्यादा response — अभी follow-up करें!</div>
+      </div>
+      <div class="sec-head"><div class="sec-title">🔥 हॉट लीड्स</div><div class="sec-link" onclick="showScreen('sc-leads')">सभी देखें</div></div>
+      <div id="home-leads"></div>
+      <div class="sec-head"><div class="sec-title">📅 आज के फॉलो-अप</div></div>
+      <div class="fu-card urg"><div class="fu-time" style="color:var(--danger)">🔴 अभी</div><div><div class="fu-name">सुनील वर्मा</div><div class="fu-act">लोन अप्रूवल चेक करें</div></div><button class="fu-btn fu-call" onclick="callLead('9876543210')">📞 कॉल</button></div>
+      <div class="fu-card tod"><div class="fu-time" style="color:var(--gold2)">11:00</div><div><div class="fu-name">प्रिया सिंह</div><div class="fu-act">साइट विजिट कन्फर्म</div></div><button class="fu-btn fu-wa" onclick="waLead('प्रिया सिंह','9988776655')">💬 WA</button></div>
+    </div>
+  </div>
 
-    <div class="lead-card fade-up" onclick="showScreen('sc-leads')">
-      <div class="lead-top">
-        <div class="lead-avatar av-hot">👩</div>
-        <div class="lead-info">
-          <div class="lead-name">प्रिया सिंह</div>
-          <div class="lead-prop">2BHK फ्लैट • गुड़गांव • 📞 99887 76655</div>
+  <!-- LEADS -->
+  <div class="screen" id="sc-leads">
+    <div class="status-bar"></div>
+    <div class="header">
+      <div class="brand"><div class="brand-logo">👥</div><div><div class="brand-name">सभी <span>लीड्स</span></div></div></div>
+      <div class="icon-btn" onclick="showSheet('addSheet')">➕</div>
+    </div>
+    <div style="padding:0 14px 8px;flex-shrink:0;display:flex;gap:7px;overflow-x:auto">
+      <div class="pill p-neg" style="padding:7px 13px;cursor:pointer;white-space:nowrap" onclick="filterLeads('all')">सभी</div>
+      <div class="pill" style="padding:7px 13px;cursor:pointer;white-space:nowrap;background:rgba(200,134,10,0.15);color:var(--gold2)" onclick="filterLeads('hot')">🔥 हॉट</div>
+      <div class="pill p-new" style="padding:7px 13px;cursor:pointer;white-space:nowrap" onclick="filterLeads('warm')">🌤 वार्म</div>
+      <div class="pill p-cold" style="padding:7px 13px;cursor:pointer;white-space:nowrap" onclick="filterLeads('cold')">❄️ ठंडा</div>
+    </div>
+    <div class="scroll-content"><div id="leads-list"></div></div>
+  </div>
+
+  <!-- PAYMENT -->
+  <div class="screen" id="sc-payment">
+    <div class="status-bar"></div>
+    <div class="header">
+      <div class="brand"><div class="brand-logo">💰</div><div><div class="brand-name">Payment <span>Tracker</span></div></div></div>
+      <div class="icon-btn" onclick="showSheet('addPaySheet')">➕</div>
+    </div>
+    <div class="scroll-content">
+      <div class="stat-row fade-up">
+        <div class="stat-tile"><div class="stv" style="color:var(--gold2)">₹24L</div><div class="stl">कुल बकाया</div></div>
+        <div class="stat-tile"><div class="stv" style="color:var(--mint)">₹8.5L</div><div class="stl">इस माह मिला</div></div>
+        <div class="stat-tile"><div class="stv" style="color:var(--danger)">3</div><div class="stl">Overdue</div></div>
+      </div>
+      <div class="sec-head"><div class="sec-title">💳 चल रहे Payments</div></div>
+      <div class="pay-card fade-up">
+        <div class="pay-header"><div><div class="pay-name">सुनील वर्मा</div><div class="pay-prop">3BHK सेक्टर 62</div></div><div><div class="pay-amount">₹85L</div><div class="pay-sub">कुल</div></div></div>
+        <div class="pay-progress"><div class="pay-fill" style="width:12%"></div></div>
+        <div class="pay-labels"><span style="color:var(--mint)">✓ ₹10L मिला</span><span>₹75L बकाया</span></div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="act-btn act-wa" onclick="waLead('सुनील वर्मा','9876543210')" style="font-size:12px;padding:8px">💬 Reminder</button>
+          <button class="act-btn act-call" onclick="callLead('9876543210')" style="font-size:12px;padding:8px">📞 कॉल</button>
         </div>
-        <div class="score-ring ring-hot">87</div>
       </div>
-      <div class="lead-bottom">
-        <div><div class="lead-budget">₹65 लाख</div><span class="pill p-visit">साइट विजिट</span></div>
-      </div>
-      <div class="lead-actions">
-        <button class="act-btn act-call" onclick="event.stopPropagation();callLead('प्रिया सिंह')">📞 कॉल करें</button>
-        <button class="act-btn act-msg" onclick="event.stopPropagation();msgLead('प्रिया सिंह')">💬 WhatsApp</button>
-      </div>
-    </div>
-
-    <!-- TODAY FOLLOWUPS -->
-    <div class="sec-head">
-      <div class="sec-title">📅 आज के फॉलो-अप</div>
-      <div class="sec-link" onclick="showScreen('sc-followup')">सभी</div>
-    </div>
-
-    <div class="fu-card urg fade-up">
-      <div class="fu-time" style="color:var(--danger)">🔴 अभी</div>
-      <div><div class="fu-name">सुनील वर्मा</div><div class="fu-act">लोन अप्रूवल अपडेट लें</div></div>
-      <button class="fu-btn fu-btn-call" onclick="callLead('सुनील वर्मा')">📞 कॉल</button>
-    </div>
-    <div class="fu-card tod fade-up">
-      <div class="fu-time" style="color:var(--gold)">11:00</div>
-      <div><div class="fu-name">प्रिया सिंह</div><div class="fu-act">साइट विजिट कन्फर्म करें</div></div>
-      <button class="fu-btn fu-btn-msg" onclick="msgLead('प्रिया सिंह')">💬 WA</button>
-    </div>
-    <div class="fu-card tod fade-up">
-      <div class="fu-time" style="color:var(--gold)">2:30</div>
-      <div><div class="fu-name">अनिल कुमार</div><div class="fu-act">नया ऑफर भेजें</div></div>
-      <button class="fu-btn fu-btn-msg">✉️ Mail</button>
-    </div>
-  </div>
-</div>
-
-<!-- ════ SCREEN: LEADS ════ -->
-<div class="screen" id="sc-leads">
-  <div class="status-bar"></div>
-  <div class="header">
-    <div><div class="header-title">सभी <span>लीड्स</span></div></div>
-    <div class="icon-btn" onclick="showAdd()">➕</div>
-  </div>
-  <div style="padding:0 16px 10px;flex-shrink:0">
-    <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">
-      <div class="pill p-neg" style="white-space:nowrap;padding:7px 14px;cursor:pointer;font-size:12px" onclick="filterLeads('सभी')">सभी (148)</div>
-      <div class="pill p-neg" style="white-space:nowrap;padding:7px 14px;cursor:pointer;font-size:12px;background:rgba(255,107,26,0.2)" onclick="filterLeads('हॉट')">🔥 हॉट (34)</div>
-      <div class="pill p-fu" style="white-space:nowrap;padding:7px 14px;cursor:pointer;font-size:12px" onclick="filterLeads('वार्म')">🌤 वार्म (58)</div>
-      <div class="pill p-cold" style="white-space:nowrap;padding:7px 14px;cursor:pointer;font-size:12px" onclick="filterLeads('ठंडा')">❄️ ठंडा (56)</div>
-    </div>
-  </div>
-  <div class="scroll-content">
-    <div id="leads-list">
-      <!-- rendered by JS -->
-    </div>
-  </div>
-</div>
-
-<!-- ════ SCREEN: FOLLOWUP ════ -->
-<div class="screen" id="sc-followup">
-  <div class="status-bar"></div>
-  <div class="header">
-    <div><div class="header-title">📅 <span>फॉलो-अप</span></div></div>
-    <div style="display:flex;align-items:center;gap:8px">
-      <div style="font-size:12px;background:rgba(0,229,160,0.12);color:var(--mint);padding:6px 12px;border-radius:20px;border:1px solid rgba(0,229,160,0.2)">ऑटो चालू ✓</div>
-    </div>
-  </div>
-  <div class="scroll-content">
-    <div class="ai-box">
-      <span class="ai-box-icon">🤖</span>
-      <div class="ai-box-text"><b>आज शाम 6 बजे</b> सबसे ज़्यादा response मिलता है — उसी समय message भेजें!</div>
-    </div>
-
-    <div class="sec-head"><div class="sec-title" style="color:var(--danger)">🔴 अर्जेंट</div></div>
-    <div class="fu-card urg">
-      <div class="fu-time" style="color:var(--danger)">अभी</div>
-      <div><div class="fu-name">सुनील वर्मा</div><div class="fu-act">लोन अप्रूवल अपडेट लें</div></div>
-      <button class="fu-btn fu-btn-call" onclick="callLead('सुनील वर्मा')">📞 कॉल</button>
-    </div>
-
-    <div class="sec-head"><div class="sec-title" style="color:var(--gold)">🟡 आज</div></div>
-    <div class="fu-card tod">
-      <div class="fu-time" style="color:var(--gold)">11:00</div>
-      <div><div class="fu-name">प्रिया सिंह</div><div class="fu-act">साइट विजिट कन्फर्म करें</div></div>
-      <button class="fu-btn fu-btn-msg" onclick="msgLead('प्रिया सिंह')">💬 WA</button>
-    </div>
-    <div class="fu-card tod">
-      <div class="fu-time" style="color:var(--gold)">2:30</div>
-      <div><div class="fu-name">अनिल कुमार</div><div class="fu-act">नया ऑफर भेजें</div></div>
-      <button class="fu-btn fu-btn-msg">✉️ Mail</button>
-    </div>
-    <div class="fu-card tod">
-      <div class="fu-time" style="color:var(--gold)">5:00</div>
-      <div><div class="fu-name">मीना पटेल</div><div class="fu-act">प्लॉट की फोटो शेयर करें</div></div>
-      <button class="fu-btn fu-btn-msg">📸 भेजें</button>
-    </div>
-
-    <div class="sec-head"><div class="sec-title" style="color:var(--sky)">🔵 कल</div></div>
-    <div class="fu-card upc">
-      <div class="fu-time" style="color:var(--sky)">10:00</div>
-      <div><div class="fu-name">विकास यादव</div><div class="fu-act">री-एंगेजमेंट SMS</div></div>
-      <button class="fu-btn fu-btn-msg">📩 SMS</button>
-    </div>
-    <div class="fu-card upc">
-      <div class="fu-time" style="color:var(--sky)">3:00</div>
-      <div><div class="fu-name">संजय गुप्ता</div><div class="fu-act">नई listing दिखाएं</div></div>
-      <button class="fu-btn fu-btn-msg">💬 WA</button>
-    </div>
-
-    <div style="background:rgba(0,229,160,0.06);border:1px solid rgba(0,229,160,0.15);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;margin-top:6px">
-      <span style="font-size:22px">🤖</span>
-      <div style="flex:1">
-        <div style="font-size:13px;font-weight:700;color:var(--mint)">Auto-Reminder चालू है</div>
-        <div style="font-size:11px;color:var(--muted)">WhatsApp + SMS अपने आप जाएंगे</div>
-      </div>
-      <div style="width:44px;height:24px;background:var(--mint);border-radius:12px;position:relative;cursor:pointer">
-        <div style="width:18px;height:18px;background:white;border-radius:50%;position:absolute;right:3px;top:3px"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ════ SCREEN: ANALYSIS ════ -->
-<div class="screen" id="sc-analysis">
-  <div class="status-bar"></div>
-  <div class="header">
-    <div><div class="header-title">🧠 <span>एनालिसिस</span></div></div>
-  </div>
-  <div class="scroll-content">
-    <!-- FUNNEL -->
-    <div class="sec-head"><div class="sec-title">📉 कन्वर्जन फनल</div></div>
-    <div class="funnel-wrap fade-up">
-      <div class="funnel-row">
-        <div class="funnel-lbl">🆕 नई लीड</div>
-        <div class="funnel-track"><div class="funnel-fill" style="width:100%;background:linear-gradient(90deg,#FF6B1A,#FF8F4E)">148</div></div>
-      </div>
-      <div class="funnel-row">
-        <div class="funnel-lbl">📞 संपर्क</div>
-        <div class="funnel-track"><div class="funnel-fill" style="width:82%;background:linear-gradient(90deg,#FFB300,#FFD040)">121</div></div>
-      </div>
-      <div class="funnel-row">
-        <div class="funnel-lbl">🏠 साइट विजिट</div>
-        <div class="funnel-track"><div class="funnel-fill" style="width:54%;background:linear-gradient(90deg,#00C2FF,#47D9FF)">80</div></div>
-      </div>
-      <div class="funnel-row">
-        <div class="funnel-lbl">💬 बातचीत</div>
-        <div class="funnel-track"><div class="funnel-fill" style="width:35%;background:linear-gradient(90deg,#A060FF,#C090FF)">52</div></div>
-      </div>
-      <div class="funnel-row">
-        <div class="funnel-lbl">✅ डील बंद</div>
-        <div class="funnel-track"><div class="funnel-fill" style="width:23%;background:linear-gradient(90deg,#00E5A0,#40FFB8)">34</div></div>
-      </div>
-    </div>
-
-    <!-- BEHAVIOR -->
-    <div class="sec-head"><div class="sec-title">📊 कस्टमर बिहेवियर</div></div>
-    <div class="report-card fade-up">
-      <div class="beh-item">
-        <div class="beh-head"><span>वेबसाइट विजिट</span><span style="color:var(--saffron)">87%</span></div>
-        <div class="beh-track"><div class="beh-fill" style="width:87%;background:linear-gradient(90deg,var(--saffron),#FF8F4E)"></div></div>
-      </div>
-      <div class="beh-item">
-        <div class="beh-head"><span>WhatsApp रिप्लाई</span><span style="color:var(--mint)">72%</span></div>
-        <div class="beh-track"><div class="beh-fill" style="width:72%;background:linear-gradient(90deg,var(--mint),#40FFB8)"></div></div>
-      </div>
-      <div class="beh-item">
-        <div class="beh-head"><span>ब्रोशर डाउनलोड</span><span style="color:var(--gold)">65%</span></div>
-        <div class="beh-track"><div class="beh-fill" style="width:65%;background:linear-gradient(90deg,var(--gold),#FFD54F)"></div></div>
-      </div>
-      <div class="beh-item">
-        <div class="beh-head"><span>साइट विजिट शो-अप</span><span style="color:var(--sky)">54%</span></div>
-        <div class="beh-track"><div class="beh-fill" style="width:54%;background:linear-gradient(90deg,var(--sky),#47D9FF)"></div></div>
-      </div>
-      <div class="beh-item" style="margin-bottom:0">
-        <div class="beh-head"><span>EMI कैलकुलेटर</span><span style="color:#A060FF">43%</span></div>
-        <div class="beh-track"><div class="beh-fill" style="width:43%;background:linear-gradient(90deg,#A060FF,#C090FF)"></div></div>
-      </div>
-    </div>
-
-    <div class="stat-row fade-up">
-      <div class="stat-tile"><div class="stat-val" style="color:var(--saffron)">68%</div><div class="stat-lbl">मोबाइल से</div></div>
-      <div class="stat-tile"><div class="stat-val" style="color:var(--sky)">शाम 6</div><div class="stat-lbl">पीक टाइम</div></div>
-      <div class="stat-tile"><div class="stat-val" style="color:var(--mint)">3.2x</div><div class="stat-lbl">औसत टच</div></div>
-    </div>
-
-    <!-- WEEKLY CHART -->
-    <div class="sec-head" style="margin-top:16px"><div class="sec-title">📅 साप्ताहिक डील</div></div>
-    <div class="report-card fade-up">
-      <div class="mini-bars">
-        <div class="mb-col"><div class="mb-bar" style="height:32px"></div><div class="mb-lbl">सोम</div></div>
-        <div class="mb-col"><div class="mb-bar" style="height:52px"></div><div class="mb-lbl">मंगल</div></div>
-        <div class="mb-col"><div class="mb-bar" style="height:38px"></div><div class="mb-lbl">बुध</div></div>
-        <div class="mb-col"><div class="mb-bar" style="height:60px"></div><div class="mb-lbl">गुरु</div></div>
-        <div class="mb-col"><div class="mb-bar" style="height:55px"></div><div class="mb-lbl">शुक्र</div></div>
-        <div class="mb-col"><div class="mb-bar" style="height:42px"></div><div class="mb-lbl">शनि</div></div>
-        <div class="mb-col"><div class="mb-bar" style="height:28px;opacity:0.4"></div><div class="mb-lbl">रवि</div></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ════ SCREEN: PROFILE ════ -->
-<div class="screen" id="sc-profile">
-  <div class="status-bar"></div>
-  <div class="header">
-    <div><div class="header-title">👤 <span>प्रोफाइल</span></div></div>
-  </div>
-  <div class="scroll-content">
-    <div style="text-align:center;padding:20px 0 24px">
-      <div style="width:80px;height:80px;border-radius:24px;background:linear-gradient(135deg,var(--saffron),var(--gold));display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 12px">👤</div>
-      <div style="font-family:'Baloo 2',cursive;font-size:22px;font-weight:800">राहुल शर्मा</div>
-      <div style="font-size:13px;color:var(--muted);margin-top:2px">सीनियर प्रॉपर्टी एजेंट • नोएडा</div>
-    </div>
-
-    <div class="stat-row" style="margin-bottom:16px">
-      <div class="stat-tile"><div class="stat-val" style="color:var(--saffron)">148</div><div class="stat-lbl">कुल लीड्स</div></div>
-      <div class="stat-tile"><div class="stat-val" style="color:var(--mint)">34</div><div class="stat-lbl">डील बंद</div></div>
-      <div class="stat-tile"><div class="stat-val" style="color:var(--gold)">₹4.2L</div><div class="stat-lbl">इस माह</div></div>
-    </div>
-
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:12px">
-      <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;cursor:pointer">
-        <span style="font-size:20px">🔔</span>
-        <span style="font-size:14px">नोटिफिकेशन सेटिंग</span>
-        <span style="margin-left:auto;color:var(--muted)">›</span>
-      </div>
-      <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;cursor:pointer">
-        <span style="font-size:20px">🤖</span>
-        <span style="font-size:14px">AI ऑटोमेशन</span>
-        <span style="margin-left:auto;color:var(--muted)">›</span>
-      </div>
-      <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;cursor:pointer">
-        <span style="font-size:20px">📱</span>
-        <span style="font-size:14px">WhatsApp लिंक</span>
-        <span style="margin-left:auto;color:var(--muted)">›</span>
-      </div>
-      <div style="padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer">
-        <span style="font-size:20px">🌙</span>
-        <span style="font-size:14px">डार्क मोड</span>
-        <div style="margin-left:auto;width:44px;height:24px;background:var(--mint);border-radius:12px;position:relative">
-          <div style="width:18px;height:18px;background:white;border-radius:50%;position:absolute;right:3px;top:3px"></div>
+      <div class="pay-card fade-up">
+        <div class="pay-header"><div><div class="pay-name">प्रिया सिंह</div><div class="pay-prop">2BHK सेक्टर 137</div></div><div><div class="pay-amount">₹55L</div><div class="pay-sub">कुल</div></div></div>
+        <div class="pay-progress"><div class="pay-fill" style="width:45%"></div></div>
+        <div class="pay-labels"><span style="color:var(--mint)">✓ ₹25L मिला</span><span>₹30L बकाया</span></div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="act-btn act-wa" onclick="waLead('प्रिया सिंह','9988776655')" style="font-size:12px;padding:8px">💬 Reminder</button>
+          <button class="act-btn act-call" onclick="callLead('9988776655')" style="font-size:12px;padding:8px">📞 कॉल</button>
         </div>
       </div>
     </div>
+  </div>
 
-    <button class="big-btn" onclick="showAdd()" style="background:transparent;border:1px solid var(--border);color:var(--muted)">🚪 लॉगआउट</button>
+  <!-- ADMIN PANEL -->
+  <div class="screen" id="sc-admin">
+    <div class="status-bar"></div>
+    <div class="header">
+      <div class="brand"><div class="brand-logo">⚙️</div><div><div class="brand-name">Admin <span>Panel</span></div><div class="brand-sub">सिर्फ Admin के लिए</div></div></div>
+    </div>
+    <div class="scroll-content">
+
+      <!-- CHANGE PASSWORD -->
+      <div class="sec-head"><div class="sec-title">🔑 Password बदलें</div></div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px" class="fade-up">
+        <div class="form-field"><label class="form-label">किसका Password?</label>
+          <select class="form-select" id="changePwUser">
+            <option value="admin">Admin (आप)</option>
+            <option value="agent1">Agent 1</option>
+            <option value="agent2">Agent 2</option>
+          </select>
+        </div>
+        <div class="form-field"><label class="form-label">नया Password</label><input class="form-input" id="newPw" type="password" placeholder="नया password डालें"></div>
+        <div class="form-field" style="margin-bottom:0"><label class="form-label">Confirm Password</label><input class="form-input" id="confirmPw" type="password" placeholder="दोबारा डालें"></div>
+        <button class="big-btn" style="margin-top:14px" onclick="changePassword()">✅ Password बदलें</button>
+      </div>
+
+      <!-- AGENTS LIST -->
+      <div class="sec-head"><div class="sec-title">👥 Agents / Users</div><div class="sec-link" onclick="showSheet('addAgentSheet')">+ Agent जोड़ें</div></div>
+      <div id="agentsList"></div>
+
+      <!-- APP SETTINGS -->
+      <div class="sec-head"><div class="sec-title">⚙️ App Settings</div></div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:12px" class="fade-up">
+        <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+          <div><div style="font-size:14px;font-weight:600">Company Name</div><div style="font-size:12px;color:var(--muted)" id="compNameShow">NCR Property Guru</div></div>
+          <span style="color:var(--muted);cursor:pointer" onclick="showSheet('settingsSheet')">✏️</span>
+        </div>
+        <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+          <div><div style="font-size:14px;font-weight:600">WhatsApp</div><div style="font-size:12px;color:var(--muted)" id="waShow">9625320621</div></div>
+          <span style="color:var(--muted);cursor:pointer" onclick="showSheet('settingsSheet')">✏️</span>
+        </div>
+        <div style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between">
+          <div><div style="font-size:14px;font-weight:600">City</div><div style="font-size:12px;color:var(--muted)">नोएडा</div></div>
+          <span style="color:var(--muted);cursor:pointer" onclick="showSheet('settingsSheet')">✏️</span>
+        </div>
+      </div>
+
+      <button class="big-btn big-btn-danger" onclick="doLogout()">🚪 Logout</button>
+    </div>
+  </div>
+
+  <!-- PROFILE (for agents) -->
+  <div class="screen" id="sc-profile">
+    <div class="status-bar"></div>
+    <div class="header">
+      <div class="brand"><div class="brand-logo">👤</div><div><div class="brand-name">मेरी <span>Profile</span></div></div></div>
+    </div>
+    <div class="scroll-content">
+      <div style="text-align:center;padding:20px 0 24px" class="fade-up">
+        <div style="width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,var(--sky),#00B8F0);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px">👤</div>
+        <div style="font-family:'Baloo 2',cursive;font-size:20px;font-weight:800" id="profileName">—</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:3px" id="profileRole">—</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-tile"><div class="stv" style="color:var(--gold2)" id="myLeads">0</div><div class="stl">मेरी लीड्स</div></div>
+        <div class="stat-tile"><div class="stv" style="color:var(--mint)">5</div><div class="stl">डील बंद</div></div>
+        <div class="stat-tile"><div class="stv" style="color:var(--sky)">₹1.2L</div><div class="stl">कमाई</div></div>
+      </div>
+      <button class="big-btn big-btn-danger" style="margin-top:16px" onclick="doLogout()">🚪 Logout</button>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav" id="bottomNav">
+    <div class="nav-tab active" id="tab-home" onclick="showScreen('sc-home',this)"><div class="ni">🏠</div><div class="nl">होम</div><div class="nav-dot"></div></div>
+    <div class="nav-tab" id="tab-leads" onclick="showScreen('sc-leads',this)"><div class="ni">👥</div><div class="nl">लीड्स</div><div class="nav-dot"></div></div>
+    <div class="nav-tab" id="tab-pay" onclick="showScreen('sc-payment',this)"><div class="ni">💰</div><div class="nl">Payment</div><div class="nav-dot"></div></div>
+    <div class="nav-tab admin-only" id="tab-admin" onclick="showScreen('sc-admin',this)"><div class="ni">⚙️</div><div class="nl">Admin</div><div class="nav-dot"></div></div>
+    <div class="nav-tab agent-only" id="tab-profile" onclick="showScreen('sc-profile',this)"><div class="ni">👤</div><div class="nl">Profile</div><div class="nav-dot"></div></div>
   </div>
 </div>
 
-<!-- ════ BOTTOM NAV ════ -->
-<div class="bottom-nav">
-  <div class="nav-tab active" id="tab-home" onclick="showScreen('sc-home', this)">
-    <div class="nav-icon">🏠</div>
-    <div class="nav-label">होम</div>
-    <div class="nav-dot"></div>
-  </div>
-  <div class="nav-tab" id="tab-leads" onclick="showScreen('sc-leads', this)">
-    <div class="nav-icon">👥</div>
-    <div class="nav-label">लीड्स</div>
-    <div class="nav-dot"></div>
-  </div>
-  <div class="nav-tab" id="tab-fu" onclick="showScreen('sc-followup', this)">
-    <div class="nav-icon">📅</div>
-    <div class="nav-label">फॉलो-अप</div>
-    <div class="nav-dot"></div>
-  </div>
-  <div class="nav-tab" id="tab-analysis" onclick="showScreen('sc-analysis', this)">
-    <div class="nav-icon">📊</div>
-    <div class="nav-label">एनालिसिस</div>
-    <div class="nav-dot"></div>
-  </div>
-  <div class="nav-tab" id="tab-profile" onclick="showScreen('sc-profile', this)">
-    <div class="nav-icon">👤</div>
-    <div class="nav-label">प्रोफाइल</div>
-    <div class="nav-dot"></div>
-  </div>
-</div>
-
-<!-- ════ ADD LEAD SHEET ════ -->
-<div class="sheet-overlay" id="addSheet" onclick="closeSheet(event)">
+<!-- ══ ADD LEAD SHEET ══ -->
+<div class="sheet-overlay" id="addSheet" onclick="closeSheet(event,'addSheet')">
   <div class="sheet" onclick="event.stopPropagation()">
     <div class="sheet-handle"></div>
     <div class="sheet-title">➕ नई लीड जोड़ें</div>
-
     <div class="form-row2">
-      <div class="form-field">
-        <label class="form-label">ग्राहक का नाम</label>
-        <input class="form-input" id="f-name" placeholder="जैसे: राम कुमार">
-      </div>
-      <div class="form-field">
-        <label class="form-label">फोन नंबर</label>
-        <input class="form-input" id="f-phone" placeholder="9XXXXXXXXX" type="tel">
-      </div>
+      <div class="form-field"><label class="form-label">ग्राहक नाम</label><input class="form-input" id="f-name" placeholder="नाम"></div>
+      <div class="form-field"><label class="form-label">फोन</label><input class="form-input" id="f-phone" placeholder="9XXXXXXXXX" type="tel"></div>
     </div>
     <div class="form-row2">
-      <div class="form-field">
-        <label class="form-label">प्रॉपर्टी टाइप</label>
-        <select class="form-select" id="f-type">
-          <option>2BHK फ्लैट</option>
-          <option>3BHK फ्लैट</option>
-          <option>विला</option>
-          <option>प्लॉट</option>
-          <option>कमर्शियल</option>
-        </select>
+      <div class="form-field"><label class="form-label">Property Type</label>
+        <select class="form-select" id="f-type"><option>2BHK फ्लैट</option><option>3BHK फ्लैट</option><option>विला</option><option>प्लॉट</option><option>कमर्शियल</option></select>
       </div>
-      <div class="form-field">
-        <label class="form-label">बजट</label>
-        <input class="form-input" id="f-budget" placeholder="₹ 50L, 1Cr...">
-      </div>
+      <div class="form-field"><label class="form-label">बजट</label><input class="form-input" id="f-budget" placeholder="₹ 50L"></div>
     </div>
     <div class="form-row2">
-      <div class="form-field">
-        <label class="form-label">लोकेशन</label>
-        <input class="form-input" id="f-loc" placeholder="नोएडा, गुड़गांव...">
-      </div>
-      <div class="form-field">
-        <label class="form-label">लीड सोर्स</label>
-        <select class="form-select" id="f-src">
-          <option>99acres</option>
-          <option>MagicBricks</option>
-          <option>रेफरेंस</option>
-          <option>सोशल मीडिया</option>
-          <option>अन्य</option>
-        </select>
+      <div class="form-field"><label class="form-label">Location</label><input class="form-input" id="f-loc" placeholder="सेक्टर, नोएडा"></div>
+      <div class="form-field"><label class="form-label">Source</label>
+        <select class="form-select" id="f-src"><option>99acres</option><option>MagicBricks</option><option>WhatsApp</option><option>रेफरेंस</option><option>अन्य</option></select>
       </div>
     </div>
-    <div class="form-field">
-      <label class="form-label">नोट्स</label>
-      <input class="form-input" id="f-note" placeholder="कोई खास जानकारी...">
-    </div>
-    <button class="big-btn" onclick="saveLead()">✅ लीड सेव करें</button>
-    <div style="height:8px"></div>
+    <div class="form-field"><label class="form-label">नोट्स</label><textarea class="form-textarea" id="f-note" placeholder="कोई जानकारी..."></textarea></div>
+    <button class="big-btn" onclick="saveLead()">✅ Lead Save करें</button>
   </div>
 </div>
 
-<!-- TOAST -->
+<!-- ══ ADD AGENT SHEET ══ -->
+<div class="sheet-overlay" id="addAgentSheet" onclick="closeSheet(event,'addAgentSheet')">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">👤 नया Agent जोड़ें</div>
+    <div class="form-field"><label class="form-label">Agent का नाम</label><input class="form-input" id="ag-name" placeholder="जैसे: Rahul, Priya..."></div>
+    <div class="form-row2">
+      <div class="form-field"><label class="form-label">Username (Login ID)</label><input class="form-input" id="ag-user" placeholder="agent1"></div>
+      <div class="form-field"><label class="form-label">Password</label><input class="form-input" id="ag-pass" type="password" placeholder="password"></div>
+    </div>
+    <div class="form-field"><label class="form-label">Phone</label><input class="form-input" id="ag-phone" placeholder="9XXXXXXXXX" type="tel"></div>
+    <div class="form-field"><label class="form-label">Role</label>
+      <select class="form-select" id="ag-role"><option value="agent">Agent</option><option value="admin">Admin</option></select>
+    </div>
+    <button class="big-btn" onclick="addAgent()">✅ Agent जोड़ें</button>
+  </div>
+</div>
+
+<!-- ══ ADD PAYMENT SHEET ══ -->
+<div class="sheet-overlay" id="addPaySheet" onclick="closeSheet(event,'addPaySheet')">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">💰 Payment जोड़ें</div>
+    <div class="form-row2">
+      <div class="form-field"><label class="form-label">Customer</label><input class="form-input" placeholder="नाम"></div>
+      <div class="form-field"><label class="form-label">कुल कीमत</label><input class="form-input" placeholder="₹ 85L"></div>
+    </div>
+    <div class="form-row2">
+      <div class="form-field"><label class="form-label">मिला हुआ</label><input class="form-input" placeholder="₹ 10L"></div>
+      <div class="form-field"><label class="form-label">अगली किस्त</label><input class="form-input" type="date"></div>
+    </div>
+    <button class="big-btn" onclick="showToast('✅ Payment जोड़ा गया!');closeSheet(null,'addPaySheet',true)">✅ Save करें</button>
+  </div>
+</div>
+
+<!-- ══ SETTINGS SHEET ══ -->
+<div class="sheet-overlay" id="settingsSheet" onclick="closeSheet(event,'settingsSheet')">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">⚙️ App Settings</div>
+    <div class="form-field"><label class="form-label">Company Name</label><input class="form-input" id="set-name" value="NCR Property Guru"></div>
+    <div class="form-field"><label class="form-label">WhatsApp Number</label><input class="form-input" id="set-wa" value="9625320621" type="tel"></div>
+    <div class="form-field"><label class="form-label">City</label><input class="form-input" id="set-city" value="नोएडा"></div>
+    <button class="big-btn" onclick="saveSettings()">✅ Settings Save करें</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
-// ── LEADS DATA ──
-const leadsData = [
-  { name:'सुनील वर्मा', phone:'9876543210', prop:'3BHK फ्लैट, नोएडा', budget:'₹85L', score:92, status:'बातचीत', statusClass:'p-neg', temp:'hot' },
-  { name:'प्रिया सिंह', phone:'9988776655', prop:'2BHK, गुड़गांव', budget:'₹65L', score:87, status:'साइट विजिट', statusClass:'p-visit', temp:'hot' },
-  { name:'अनिल कुमार', phone:'9123456789', prop:'विला, फरीदाबाद', budget:'₹1.2Cr', score:71, status:'फॉलो-अप', statusClass:'p-fu', temp:'warm' },
-  { name:'मीना पटेल', phone:'9871234560', prop:'प्लॉट, ग्रेटर नोएडा', budget:'₹45L', score:65, status:'नया', statusClass:'p-new', temp:'warm' },
-  { name:'संजय गुप्ता', phone:'9654321087', prop:'3BHK, दिल्ली', budget:'₹90L', score:60, status:'फॉलो-अप', statusClass:'p-fu', temp:'warm' },
-  { name:'विकास यादव', phone:'9512348760', prop:'2BHK, दिल्ली', budget:'₹55L', score:42, status:'ठंडा', statusClass:'p-cold', temp:'cold' },
-  { name:'रीना शर्मा', phone:'9876012345', prop:'2BHK, नोएडा', budget:'₹60L', score:38, status:'ठंडा', statusClass:'p-cold', temp:'cold' },
+// ══ USER DATABASE (easily editable) ══
+// Password बदलने के लिए Admin Panel → Password बदलें
+let USERS = {
+  admin:  { pass:'NCRguru@2024', role:'admin', name:'NCR Property Guru (Admin)' },
+  agent1: { pass:'agent@111',    role:'agent', name:'Agent 1' },
+  agent2: { pass:'agent@222',    role:'agent', name:'Agent 2' },
+};
+
+let currentUser = null;
+
+// ══ LEADS DATA ══
+let leads = [
+  {name:'सुनील वर्मा',phone:'9876543210',prop:'3BHK, सेक्टर 62',budget:'₹85L',score:92,status:'बातचीत',sc:'p-neg',temp:'hot'},
+  {name:'प्रिया सिंह',phone:'9988776655',prop:'2BHK, सेक्टर 137',budget:'₹65L',score:87,status:'साइट विजिट',sc:'p-visit',temp:'hot'},
+  {name:'अनिल कुमार',phone:'9123456789',prop:'विला, ग्रेटर नोएडा',budget:'₹1.2Cr',score:71,status:'फॉलो-अप',sc:'p-fu',temp:'warm'},
+  {name:'मीना पटेल',phone:'9871234560',prop:'प्लॉट, नोएडा',budget:'₹45L',score:65,status:'नया',sc:'p-new',temp:'warm'},
+  {name:'विकास यादव',phone:'9512348760',prop:'2BHK, नोएडा',budget:'₹55L',score:42,status:'ठंडा',sc:'p-cold',temp:'cold'},
 ];
 
-let currentLeads = [...leadsData];
+// ══ LOGIN ══
+function doLogin() {
+  const u = document.getElementById('loginUser').value.trim().toLowerCase();
+  const p = document.getElementById('loginPass').value;
+  if(USERS[u] && USERS[u].pass === p) {
+    currentUser = { id:u, ...USERS[u] };
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('mainApp').classList.add('visible');
+    setupForRole();
+    renderLeads(leads); renderHome(); updateKPI();
+  } else {
+    document.getElementById('loginError').style.display='block';
+    setTimeout(()=>document.getElementById('loginError').style.display='none',2500);
+  }
+}
 
-function renderLeads(leads) {
-  const list = document.getElementById('leads-list');
-  list.innerHTML = leads.map(l => `
-    <div class="lead-card">
-      <div class="lead-top">
-        <div class="lead-avatar av-${l.temp}">${l.temp==='hot'?'🔥':l.temp==='warm'?'🌤':'❄️'}</div>
-        <div class="lead-info">
-          <div class="lead-name">${l.name}</div>
-          <div class="lead-prop">${l.prop} • 📞 ${l.phone}</div>
-        </div>
-        <div class="score-ring ring-${l.temp}">${l.score}</div>
+function setupForRole() {
+  const isAdmin = currentUser.role === 'admin';
+  document.getElementById('roleLabel').textContent = currentUser.name + (isAdmin?' 👑':'');
+  document.querySelectorAll('.admin-only').forEach(el=>el.style.display=isAdmin?'':'none');
+  document.querySelectorAll('.agent-only').forEach(el=>el.style.display=isAdmin?'none':'');
+  document.getElementById('profileName').textContent = currentUser.name;
+  document.getElementById('profileRole').textContent = isAdmin?'Admin':'Agent';
+  document.getElementById('myLeads').textContent = leads.length;
+  renderAgentsList();
+}
+
+function doLogout() {
+  currentUser = null;
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('mainApp').classList.remove('visible');
+  document.getElementById('loginUser').value='';
+  document.getElementById('loginPass').value='';
+}
+
+// ══ CHANGE PASSWORD ══
+function changePassword() {
+  const who = document.getElementById('changePwUser').value;
+  const np = document.getElementById('newPw').value;
+  const cp = document.getElementById('confirmPw').value;
+  if(!np){ showToast('⚠️ Password डालें!'); return; }
+  if(np !== cp){ showToast('❌ Password match नहीं हुआ!'); return; }
+  if(np.length < 6){ showToast('⚠️ कम से कम 6 अक्षर चाहिए!'); return; }
+  if(USERS[who]) {
+    USERS[who].pass = np;
+    document.getElementById('newPw').value='';
+    document.getElementById('confirmPw').value='';
+    showToast(`✅ ${USERS[who].name} का password बदल गया!`);
+  }
+}
+
+// ══ ADD AGENT ══
+function addAgent() {
+  const name = document.getElementById('ag-name').value.trim();
+  const user = document.getElementById('ag-user').value.trim().toLowerCase();
+  const pass = document.getElementById('ag-pass').value;
+  const role = document.getElementById('ag-role').value;
+  if(!name||!user||!pass){ showToast('⚠️ सभी fields भरें!'); return; }
+  if(USERS[user]){ showToast('❌ यह Username पहले से है!'); return; }
+  USERS[user] = { pass, role, name };
+  // Add to password dropdown
+  const sel = document.getElementById('changePwUser');
+  const opt = document.createElement('option');
+  opt.value=user; opt.textContent=name;
+  sel.appendChild(opt);
+  closeSheet(null,'addAgentSheet',true);
+  renderAgentsList();
+  ['ag-name','ag-user','ag-pass','ag-phone'].forEach(id=>document.getElementById(id).value='');
+  showToast(`✅ ${name} को add किया गया! ID: ${user}`);
+}
+
+function renderAgentsList() {
+  const list = document.getElementById('agentsList');
+  if(!list) return;
+  list.innerHTML = Object.entries(USERS).map(([id, u])=>`
+    <div class="agent-card-item fade-up">
+      <div class="agent-avatar ${u.role==='admin'?'av-admin':'av-agent'}">${u.role==='admin'?'👑':'👤'}</div>
+      <div class="agent-info">
+        <div class="agent-name-text">${u.name}</div>
+        <div class="agent-role">ID: ${id}</div>
       </div>
-      <div class="lead-bottom">
-        <div><div class="lead-budget">${l.budget}</div><span class="pill ${l.statusClass}">${l.status}</span></div>
-      </div>
-      <div class="lead-actions">
-        <button class="act-btn act-call" onclick="callLead('${l.name}')">📞 कॉल करें</button>
-        <button class="act-btn act-msg" onclick="msgLead('${l.name}')">💬 WhatsApp</button>
-      </div>
+      <span class="agent-badge ${u.role==='admin'?'badge-admin':'badge-agent'}">${u.role==='admin'?'Admin':'Agent'}</span>
     </div>
   `).join('');
 }
 
-renderLeads(leadsData);
-
-function filterLeads(f) {
-  if (f === 'सभी') renderLeads(leadsData);
-  else if (f === 'हॉट') renderLeads(leadsData.filter(l => l.temp === 'hot'));
-  else if (f === 'वार्म') renderLeads(leadsData.filter(l => l.temp === 'warm'));
-  else renderLeads(leadsData.filter(l => l.temp === 'cold'));
+// ══ SETTINGS ══
+function saveSettings() {
+  const name = document.getElementById('set-name').value;
+  const wa = document.getElementById('set-wa').value;
+  document.getElementById('compNameShow').textContent = name;
+  document.getElementById('waShow').textContent = wa;
+  closeSheet(null,'settingsSheet',true);
+  showToast('✅ Settings save हो गई!');
 }
 
-// ── NAVIGATION ──
-function showScreen(id, tabEl) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  if (tabEl) tabEl.classList.add('active');
-  else {
-    const map = { 'sc-home':'tab-home','sc-leads':'tab-leads','sc-followup':'tab-fu','sc-analysis':'tab-analysis','sc-profile':'tab-profile' };
-    if (map[id]) document.getElementById(map[id]).classList.add('active');
-  }
+// ══ LEADS ══
+function leadCard(l) {
+  const av=l.temp==='hot'?'🔥':l.temp==='warm'?'🌤':'❄️';
+  return `<div class="lead-card">
+    <div class="lead-top">
+      <div class="lead-av av-${l.temp}">${av}</div>
+      <div class="lead-info"><div class="lead-name">${l.name}</div><div class="lead-prop">${l.prop} • 📞 ${l.phone}</div></div>
+      <div class="score-ring ring-${l.temp}">${l.score}</div>
+    </div>
+    <div class="lead-mid"><div class="lead-budget">${l.budget}</div><span class="pill ${l.sc}">${l.status}</span></div>
+    <div class="lead-actions">
+      <button class="act-btn act-call" onclick="callLead('${l.phone}')">📞 कॉल</button>
+      <button class="act-btn act-wa" onclick="waLead('${l.name}','${l.phone}')">💬 WA</button>
+      <button class="act-btn act-map" onclick="openMap('${l.prop}')">🗺️</button>
+    </div>
+  </div>`;
 }
-
-// ── SHEET ──
-function showAdd() {
-  document.getElementById('addSheet').classList.add('open');
-}
-function closeSheet(e) {
-  document.getElementById('addSheet').classList.remove('open');
-}
+function renderLeads(list){ document.getElementById('leads-list').innerHTML=list.map(leadCard).join(''); }
+function renderHome(){ document.getElementById('home-leads').innerHTML=leads.filter(l=>l.temp==='hot').slice(0,2).map(leadCard).join(''); }
+function filterLeads(f){ const m={all:leads,hot:leads.filter(l=>l.temp==='hot'),warm:leads.filter(l=>l.temp==='warm'),cold:leads.filter(l=>l.temp==='cold')}; renderLeads(m[f]); }
+function updateKPI(){ document.getElementById('kpi-total').textContent=leads.length; document.getElementById('kpi-hot').textContent=leads.filter(l=>l.temp==='hot').length; }
 
 function saveLead() {
-  const name = document.getElementById('f-name').value.trim();
-  if (!name) { showToast('⚠️ नाम डालें!'); return; }
-  const newLead = {
-    name, phone: document.getElementById('f-phone').value || '—',
-    prop: `${document.getElementById('f-type').value}, ${document.getElementById('f-loc').value || '—'}`,
-    budget: document.getElementById('f-budget').value || '—',
-    score: Math.floor(Math.random()*30)+40,
-    status: 'नया', statusClass: 'p-new', temp: 'warm'
-  };
-  leadsData.unshift(newLead);
-  renderLeads(leadsData);
-  document.getElementById('addSheet').classList.remove('open');
-  ['f-name','f-phone','f-budget','f-loc','f-note'].forEach(id => document.getElementById(id).value='');
-  showToast(`✅ ${name} की लीड जोड़ी गई!`);
+  const name=document.getElementById('f-name').value.trim();
+  if(!name){showToast('⚠️ नाम डालें!');return;}
+  leads.unshift({name,phone:document.getElementById('f-phone').value||'—',prop:`${document.getElementById('f-type').value}, ${document.getElementById('f-loc').value||'नोएडा'}`,budget:document.getElementById('f-budget').value||'—',score:Math.floor(Math.random()*25)+45,status:'नया',sc:'p-new',temp:'warm'});
+  renderLeads(leads); renderHome(); updateKPI();
+  closeSheet(null,'addSheet',true);
+  ['f-name','f-phone','f-budget','f-loc','f-note'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  showToast(`✅ ${name} की Lead जोड़ी गई!`);
 }
 
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
+// ══ NAVIGATION ══
+function showScreen(id, tabEl) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  const map={'sc-home':'tab-home','sc-leads':'tab-leads','sc-payment':'tab-pay','sc-admin':'tab-admin','sc-profile':'tab-profile'};
+  const t=tabEl||document.getElementById(map[id]);
+  if(t) t.classList.add('active');
 }
 
-function callLead(name) { showToast(`📞 ${name} को कॉल कर रहे हैं...`); }
-function msgLead(name) { showToast(`💬 ${name} को WhatsApp भेजा!`); }
+// ══ SHEETS ══
+function showSheet(id){document.getElementById(id).classList.add('open');}
+function closeSheet(e,id,force){if(force||!e||e.target===document.getElementById(id))document.getElementById(id).classList.remove('open');}
 
-// ── PWA INSTALL ──
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredPrompt = e;
-});
+// ══ ACTIONS ══
+function callLead(phone){showToast('📞 Call हो रहा है...');setTimeout(()=>{window.location.href=`tel:${phone}`;},600);}
+function waLead(name,phone){const msg=encodeURIComponent(`नमस्ते ${name} जी! NCR Property Guru की तरफ से — Property में interest है? 🏠`);window.open(`https://wa.me/91${phone}?text=${msg}`,'_blank');}
+function openMap(loc){window.open(`https://maps.google.com/?q=${encodeURIComponent(loc+' Noida')}`,'_blank');}
 
-function promptInstall() {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(c => {
-      if (c.outcome === 'accepted') {
-        document.getElementById('installBanner').style.display = 'none';
-        showToast('🎉 App install हो गई!');
-      }
-    });
-  } else {
-    showToast('📱 Browser menu → "Add to Home Screen" करें!');
-  }
-}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
 
-// ── SERVICE WORKER ──
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').catch(() => {});
-}
-
-// ── ANIMATE FUNNEL ON VIEW ──
-function animateFunnel() {
-  document.querySelectorAll('.funnel-fill, .beh-fill').forEach(el => {
-    const w = el.style.width;
-    el.style.width = '0';
-    setTimeout(() => el.style.width = w, 200);
-  });
-}
-document.getElementById('tab-analysis').addEventListener('click', () => setTimeout(animateFunnel, 100));
+// Enter key login
+document.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 </script>
 </body>
 </html>
